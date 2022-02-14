@@ -1,13 +1,14 @@
 import ctypes
+import os
 import threading
 import time
+from sys import exit
 
 from csgo import helper as h
 from csgo.entity import Entity
 from csgo.local import LocalPlayer
-from csgo.memory import Memory, game_handle, client_dll, client_dll_size, engine_dll
+from csgo.memory import Memory
 from hex_keycodes import *
-
 
 flag = {"working": True}
 
@@ -161,9 +162,20 @@ def start_threads():
 
 
 if __name__ == '__main__':
-    mem = Memory(game_handle, client_dll, client_dll_size, engine_dll)
-    ent = Entity(mem)
-    lp = LocalPlayer(mem)
-    ent.entity_loop()
-    start_threads()
-    print("Cheat activated successfully")
+    ctypes.windll.kernel32.SetConsoleTitleW("NoName External")
+    os.system('cls' if os.name in ('nt', 'dos') else 'clear')
+    try:
+        mem = Memory()
+        ent = Entity(mem)
+        lp = LocalPlayer(mem)
+        ent.entity_loop()
+        start_threads()
+        print("Cheat activated successfully!")
+        print("TriggerBot — hold Alt")
+        print("BunnyHop — hold Space")
+        print("ChangeFov —  up arrow to add, down arrow to subtract, right arrow to normalize")
+        print("Exit — press Delete")
+    except Exception as e:
+        print(e)
+        input()
+        exit(0)

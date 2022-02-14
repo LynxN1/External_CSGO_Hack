@@ -1,11 +1,11 @@
 from csgo import offsets
 from csgo.helper import *
 from csgo.local import LocalPlayer
-from csgo.memory import *
+from csgo.memory import Memory
 
 
 class Entity(LocalPlayer):
-    def __init__(self, mem) -> None:
+    def __init__(self, mem: Memory) -> None:
         self.mem = mem
         self.entity_list = []
         self.glow_objects_list = []
@@ -82,7 +82,7 @@ class Entity(LocalPlayer):
         return self.mem.game_handle.read_uint(entity + offsets.m_iGlowIndex)
 
     def is_bomb_planted(self):
-        return self.mem.game_handle.read_bool((client_dll + offsets.dwGameRulesProxy) + offsets.m_bBombPlanted)
+        return self.mem.game_handle.read_bool((self.mem.client_dll + offsets.dwGameRulesProxy) + offsets.m_bBombPlanted)
 
     def is_valid(self):
         if (self.get_entity(0) > 0 and self.get_health(self.player) > 0
