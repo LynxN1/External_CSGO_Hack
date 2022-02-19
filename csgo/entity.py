@@ -1,4 +1,4 @@
-from csgo import offsets
+from csgo.offsets import offset_list
 from csgo.helper import *
 from csgo.local import LocalPlayer
 from csgo.memory import Memory
@@ -15,7 +15,7 @@ class Entity(LocalPlayer):
         self.entity_list.clear()
         try:
             for i in range(1, 32):
-                entity = self.mem.game_handle.read_uint(self.mem.client_dll + offsets.dwEntityList + i * 0x10)
+                entity = self.mem.game_handle.read_uint(self.mem.client_dll + hex(offset_list["dwEntityList"]) + i * 0x10)
                 if entity != 0:
                     self.entity_list.append(entity)
         except Exception as err:
@@ -32,37 +32,37 @@ class Entity(LocalPlayer):
             print(err)
 
     def get_entity(self, entity):
-        return self.mem.game_handle.read_uint((self.mem.client_dll + offsets.dwEntityList) + entity * 0x10)
+        return self.mem.game_handle.read_uint((self.mem.client_dll + hex(offset_list["dwEntityList"])) + entity * 0x10)
 
     def get_life_state(self, entity):
-        return self.mem.game_handle.read_int(entity + offsets.m_lifeState)
+        return self.mem.game_handle.read_int(entity + hex(offset_list["m_lifeState"]))
 
     def get_health(self, entity):
-        return self.mem.game_handle.read_int(entity + offsets.m_iHealth)
+        return self.mem.game_handle.read_int(entity + hex(offset_list["m_iHealth"]))
 
     def get_team(self, entity):
-        return self.mem.game_handle.read_int(entity + offsets.m_iTeamNum)
+        return self.mem.game_handle.read_int(entity + hex(offset_list["m_iTeamNum"]))
 
     def get_dormant(self, entity):
-        return self.mem.game_handle.read_bool(entity + offsets.m_bDormant)
+        return self.mem.game_handle.read_bool(entity + hex(offset_list["m_bDormant"]))
 
     def set_dormant(self, entity, val: bool):
-        return self.mem.game_handle.write_bool(entity + offsets.m_bDormant, val)
+        return self.mem.game_handle.write_bool(entity + hex(offset_list["m_bDormant"]), val)
 
     def is_visible(self, entity):
-        return self.mem.game_handle.read_bool(entity + offsets.m_bSpotted)
+        return self.mem.game_handle.read_bool(entity + hex(offset_list["m_bSpotted"]))
 
     def set_is_visible(self, entity, val: bool):
-        return self.mem.game_handle.write_bool(entity + offsets.m_bSpotted, val)
+        return self.mem.game_handle.write_bool(entity + hex(offset_list["m_bSpotted"]), val)
 
     def is_defusing(self, entity):
-        return self.mem.game_handle.read_bool(entity + offsets.m_bIsDefusing)
+        return self.mem.game_handle.read_bool(entity + hex(offset_list["m_bIsDefusing"]))
 
     def get_flag(self, entity):
-        return self.mem.game_handle.read_int(entity + offsets.m_fFlags)
+        return self.mem.game_handle.read_int(entity + hex(offset_list["m_fFlags"]))
 
     def get_shots_fired(self, entity):
-        return self.mem.game_handle.read_uint(entity + offsets.m_iShotsFired)
+        return self.mem.game_handle.read_uint(entity + hex(offset_list["m_iShotsFired"]))
 
     def get_total_hits(self, entity):
         return self.mem.game_handle.read_uint(entity + 0x103f8)  # m_totalHitsOnServer
@@ -70,19 +70,19 @@ class Entity(LocalPlayer):
     def is_bomb_planted(self):
         return self.mem.game_handle.read_bool(
             self.mem.game_handle.read_int(
-                self.mem.client_dll + offsets.dwGameRulesProxy) + offsets.m_bBombPlanted)
+                self.mem.client_dll + hex(offset_list["dwGameRulesProxy"])) + hex(offset_list["m_bBombPlanted"]))
 
     def glow_object(self):
-        return self.mem.game_handle.read_uint(self.mem.client_dll + offsets.dwGlowObjectManager)
+        return self.mem.game_handle.read_uint(self.mem.client_dll + hex(offset_list["dwGlowObjectManager"]))
 
     def glow_object_size(self):
         return self.mem.game_handle.read_uint(self.glow_object() + 0xC)
 
     def glow_index(self, entity):
-        return self.mem.game_handle.read_uint(entity + offsets.m_iGlowIndex)
+        return self.mem.game_handle.read_uint(entity + hex(offset_list["m_iGlowIndex"]))
 
     def is_bomb_planted(self):
-        return self.mem.game_handle.read_bool((self.mem.client_dll + offsets.dwGameRulesProxy) + offsets.m_bBombPlanted)
+        return self.mem.game_handle.read_bool((self.mem.client_dll + hex(offset_list["dwGameRulesProxy"])) + hex(offset_list["m_bBombPlanted"]))
 
     def is_valid(self):
         if (self.get_entity(0) > 0 and self.get_health(self.player) > 0
@@ -92,10 +92,10 @@ class Entity(LocalPlayer):
             return False
 
     def engine_ptr(self):
-        return self.mem.game_handle.read_uint(self.mem.engine_dll + offsets.dwClientState)
+        return self.mem.game_handle.read_uint(self.mem.engine_dll + hex(offset_list["dwClientState"]))
 
     def in_game(self):
-        return self.mem.game_handle.read_uint(self.engine_ptr() + offsets.dwClientState_State) == 6
+        return self.mem.game_handle.read_uint(self.engine_ptr() + hex(offset_list["dwClientState_State"])) == 6
 
     def class_id(self, entity):
         dwClientNetworkable = self.mem.game_handle.read_uint(entity + 0x8)
@@ -105,26 +105,26 @@ class Entity(LocalPlayer):
         return classID
 
     def get_position(self, entity):
-        x = self.mem.game_handle.read_float(entity + offsets.m_vecOrigin)
-        y = self.mem.game_handle.read_float(entity + offsets.m_vecOrigin + 0x4)
-        z = self.mem.game_handle.read_float(entity + offsets.m_vecOrigin + 0x8)
+        x = self.mem.game_handle.read_float(entity + hex(offset_list["m_vecOrigin"]))
+        y = self.mem.game_handle.read_float(entity + hex(offset_list["m_vecOrigin"]) + 0x4)
+        z = self.mem.game_handle.read_float(entity + hex(offset_list["m_vecOrigin"]) + 0x8)
         return Vector3(x, y, z)
 
     def get_bone_position(self, entity, bone_id):
-        base = self.mem.game_handle.read_int(entity + offsets.m_dwBoneMatrix)
+        base = self.mem.game_handle.read_int(entity + hex(offset_list["m_dwBoneMatrix"]))
         x = self.mem.game_handle.read_float(base + 0x30 * bone_id + 0x0c)
         y = self.mem.game_handle.read_float(base + 0x30 * bone_id + 0x1c)
         z = self.mem.game_handle.read_float(base + 0x30 * bone_id + 0x2c)
         return Vector3(x, y, z)
 
     def active_weapon(self):
-        actWeapon = self.mem.game_handle.read_uint(self.local_player() + offsets.m_hActiveWeapon) & 0xFFF
-        actWeapon = self.mem.game_handle.read_uint(self.mem.client_dll + offsets.dwEntityList + (actWeapon - 1) * 0x10)
-        return self.mem.game_handle.read_short(actWeapon + offsets.m_iItemDefinitionIndex)
+        actWeapon = self.mem.game_handle.read_uint(self.local_player() + hex(offset_list["m_hActiveWeapon"])) & 0xFFF
+        actWeapon = self.mem.game_handle.read_uint(self.mem.client_dll + hex(offset_list["dwEntityList"]) + (actWeapon - 1) * 0x10)
+        return self.mem.game_handle.read_short(actWeapon + hex(offset_list["m_iItemDefinitionIndex"]))
 
     def get_name(self, entity):
         player_info = self.mem.game_handle.read_uint(self.engine_ptr()
-                                                     + offsets.dwClientState_PlayerInfo)
+                                                     + hex(offset_list["dwClientState_PlayerInfo"]))
 
         player_info_items = self.mem.game_handle.read_uint(
             self.mem.game_handle.read_uint(player_info + 0x40) + 0xC
@@ -135,5 +135,5 @@ class Entity(LocalPlayer):
             return self.mem.game_handle.read_string(info + 0x10)
 
     def get_rank(self, entity):
-        player_resources = self.mem.game_handle.read_uint(self.mem.client_dll + offsets.dwPlayerResource)
-        return self.mem.game_handle.read_int(player_resources + offsets.m_iCompetitiveWins + (entity * 0x4))
+        player_resources = self.mem.game_handle.read_uint(self.mem.client_dll + hex(offset_list["dwPlayerResource"]))
+        return self.mem.game_handle.read_int(player_resources + hex(offset_list["m_iCompetitiveWins"]) + (entity * 0x4))
