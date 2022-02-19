@@ -4,6 +4,7 @@ Cheat is not injected into the game, so it is not detected by VAC and does not a
 ## Requirements
 - Pymem
 - tabulate
+- pywin32
 
 ## Functions
 - WallHack
