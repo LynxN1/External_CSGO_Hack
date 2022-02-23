@@ -78,19 +78,22 @@ def wall_hack():
 def trigger_bot():
     t = 2
     ct = 3
-    delay = 0.03
+    delay = 0.01
     while WORKING:
         if IN_GAME:
             if ctypes.windll.user32.GetAsyncKeyState(TRIGGER_BOT_KEY):
-                local_player_id = ent.get_team(lp.local_player())
-                if local_player_id == t:
-                    if ent.get_team(lp.get_entity_by_crosshair()) == ct:
-                        time.sleep(delay)
-                        lp.force_attack(6)
-                elif local_player_id == ct:
-                    if ent.get_team(lp.get_entity_by_crosshair()) == t:
-                        time.sleep(delay)
-                        lp.force_attack(6)
+                try:
+                    local_player_id = ent.get_team(lp.local_player())
+                    if local_player_id == t:
+                        if ent.get_team(lp.get_entity_by_crosshair()) == ct:
+                            time.sleep(delay)
+                            lp.force_attack(6)
+                    elif local_player_id == ct:
+                        if ent.get_team(lp.get_entity_by_crosshair()) == t:
+                            time.sleep(delay)
+                            lp.force_attack(6)
+                except:
+                    pass
         time.sleep(0.001)
     print("TriggerBot finished")
 
@@ -114,7 +117,10 @@ def radar_hack():
     while WORKING:
         if IN_GAME:
             for i in ent.entity_list:
-                ent.set_is_visible(i, True)
+                try:
+                    ent.set_is_visible(i, True)
+                except:
+                    pass
         time.sleep(0.001)
     print("RadarHack finished")
 
@@ -140,8 +146,12 @@ def fov_changer():
 
 def check_in_game_status():
     global IN_GAME
+    global WORKING
     while WORKING:
-        IN_GAME = ent.in_game()
+        try:
+            IN_GAME = ent.in_game()
+        except:
+            WORKING = False
         time.sleep(2.5)
 
 
